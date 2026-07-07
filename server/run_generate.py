@@ -32,15 +32,23 @@ async def main():
         if data:
             image_bytes = data
 
-    result = await generate_image(
-        args.prompt,
-        image_bytes=image_bytes,
-        image_media_type=media_type,
-        aspect_ratio=args.aspect_ratio,
-        model=args.model,
-    )
+    # Debug: show env token presence
+    token = os.environ.get("HF_TOKEN", "")
+    print(f"[run_generate] HF_TOKEN present: {bool(token)}, len={len(token)}", file=sys.stderr)
 
-    sys.stdout.buffer.write(result)
+    try:
+        result = await generate_image(
+            args.prompt,
+            image_bytes=image_bytes,
+            image_media_type=media_type,
+            aspect_ratio=args.aspect_ratio,
+            model=args.model,
+        )
+        print(f"[run_generate] Success: {len(result)} bytes", file=sys.stderr)
+        sys.stdout.buffer.write(result)
+    except Exception as e:
+        print(f"[run_generate] ERROR: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

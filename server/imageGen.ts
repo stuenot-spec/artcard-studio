@@ -5,7 +5,7 @@
 
 const HF_TOKEN = process.env.HF_TOKEN || "";
 // Use router endpoint which has better DNS availability
-const HF_API_URL = "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-2-1";
+const HF_API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell";
 
 interface GenerateOptions {
   imageBytes?: Buffer;

@@ -166,12 +166,19 @@ export async function registerRoutes(httpServer: Server, app: Express) {
     } catch(e: any) { results.google_err = e.cause?.message || e.message; }
     // Test HF
     try {
-      const r = await fetch("https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-2-1", {
-        method: "GET",
-        headers: { "Authorization": `Bearer ${process.env.HF_TOKEN}` },
-        signal: AbortSignal.timeout(10_000),
+      const r = await fetch("https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell", {
+        method: "POST",
+        headers: { 
+          "Authorization": `Bearer ${process.env.HF_TOKEN}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ inputs: "a red circle" }),
+        signal: AbortSignal.timeout(30_000),
       });
       results.hf_status = r.status;
+      results.hf_content_type = r.headers.get("content-type");
+      const body = await r.arrayBuffer();
+      results.hf_bytes = body.byteLength;
     } catch(e: any) { results.hf_err = e.cause?.message || e.message; }
     res.json(results);
   });

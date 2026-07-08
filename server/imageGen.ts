@@ -4,7 +4,7 @@
  */
 
 const HF_TOKEN = process.env.HF_TOKEN || "";
-const HF_API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell";
+const HF_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1";
 
 interface GenerateOptions {
   imageBytes?: Buffer;

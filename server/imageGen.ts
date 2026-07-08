@@ -4,7 +4,8 @@
  */
 
 const HF_TOKEN = process.env.HF_TOKEN || "";
-const HF_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1";
+// Use router endpoint which has better DNS availability
+const HF_API_URL = "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-2-1";
 
 interface GenerateOptions {
   imageBytes?: Buffer;

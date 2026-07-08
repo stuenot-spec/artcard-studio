@@ -157,6 +157,19 @@ export async function registerRoutes(httpServer: Server, app: Express) {
     }));
   });
 
+  app.get("/api/test-hf", async (_req, res) => {
+    try {
+      const r = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1", {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${process.env.HF_TOKEN}` },
+        signal: AbortSignal.timeout(10_000),
+      });
+      res.json({ status: r.status, ok: r.ok, hf_token_set: !!process.env.HF_TOKEN });
+    } catch(e: any) {
+      res.json({ error: e.message, cause: e.cause?.message, hf_token_set: !!process.env.HF_TOKEN });
+    }
+  });
+
   app.get("/api/frame-recommendations", (_req, res) => {
     res.json({ frames: FRAMES, shootingTips: TIPS });
   });

@@ -96,8 +96,9 @@ export async function registerRoutes(httpServer: Server, app: Express) {
         const buf = await generate_image(p.prompt);
         sseWrite(res, "card", { id: p.id, label: p.label, description: p.description, image: `data:image/png;base64,${buf.toString("base64")}`, success: true });
       } catch (err: any) {
-        console.error(`[stream-cards] error (${p.id}):`, err?.message?.slice(0, 200));
-        sseWrite(res, "card", { id: p.id, label: p.label, description: p.description, image: null, success: false });
+        const errMsg = err?.message || String(err);
+        console.error(`[stream-cards] error (${p.id}):`, errMsg.slice(0, 500));
+        sseWrite(res, "card", { id: p.id, label: p.label, description: p.description, image: null, success: false, error: errMsg.slice(0, 200) });
       }
       if (++done === PROMPTS.length) { sseWrite(res, "done", { total: done }); clearInterval(heartbeat); res.end(); }
     }));

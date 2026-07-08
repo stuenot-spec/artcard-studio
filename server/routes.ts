@@ -158,19 +158,26 @@ export async function registerRoutes(httpServer: Server, app: Express) {
   });
 
   app.get("/api/test-hf", async (_req, res) => {
+    const results: any = { hf_token_set: !!process.env.HF_TOKEN, hf_token_len: (process.env.HF_TOKEN||'').length };
+    // Test google
+    try {
+      const r = await fetch("https://www.google.com", { signal: AbortSignal.timeout(5_000) });
+      results.google = r.status;
+    } catch(e: any) { results.google_err = e.cause?.message || e.message; }
+    // Test HF
     try {
       const r = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1", {
         method: "GET",
         headers: { "Authorization": `Bearer ${process.env.HF_TOKEN}` },
         signal: AbortSignal.timeout(10_000),
       });
-      res.json({ status: r.status, ok: r.ok, hf_token_set: !!process.env.HF_TOKEN });
-    } catch(e: any) {
-      res.json({ error: e.message, cause: e.cause?.message, hf_token_set: !!process.env.HF_TOKEN });
-    }
+      results.hf_status = r.status;
+    } catch(e: any) { results.hf_err = e.cause?.message || e.message; }
+    res.json(results);
   });
 
   app.get("/api/frame-recommendations", (_req, res) => {
     res.json({ frames: FRAMES, shootingTips: TIPS });
   });
 }
+// Already added

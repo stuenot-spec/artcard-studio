@@ -166,7 +166,7 @@ export async function registerRoutes(httpServer: Server, app: Express) {
     } catch(e: any) { results.google_err = e.cause?.message || e.message; }
     // Test HF
     try {
-      const r = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1", {
+      const r = await fetch("https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-2-1", {
         method: "GET",
         headers: { "Authorization": `Bearer ${process.env.HF_TOKEN}` },
         signal: AbortSignal.timeout(10_000),

@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: artcard-studio
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: NODE_ENV=production node dist/index.cjs
+    envVars:
+      - key: NODE_ENV
+        value: production
